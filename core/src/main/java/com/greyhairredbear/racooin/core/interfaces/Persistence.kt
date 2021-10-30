@@ -6,6 +6,12 @@ import com.greyhairredbear.racooin.core.model.CryptoCurrency
 import com.greyhairredbear.racooin.core.model.CryptoCurrencyRate
 import com.greyhairredbear.racooin.core.model.FiatBalance
 import com.greyhairredbear.racooin.core.model.PersistenceError
+import java.time.LocalDateTime
+
+data class CryptoCurrencyRatesWithTimestamp(
+    val timeOfFetching: LocalDateTime,
+    val rates: List<CryptoCurrencyRate>,
+)
 
 interface Persistence {
     suspend fun persistCryptoBalance(balance: CryptoBalance): Either<PersistenceError, Unit>
@@ -21,5 +27,5 @@ interface Persistence {
     suspend fun fetchAllInvests(): Either<PersistenceError, List<FiatBalance>>
 
     suspend fun persistCurrencyRates(rates: List<CryptoCurrencyRate>): Either<PersistenceError, Unit>
-    suspend fun fetchCurrencyRates(): Either<PersistenceError, List<CryptoCurrencyRate>>
+    suspend fun fetchCurrencyRates(): Either<PersistenceError, CryptoCurrencyRatesWithTimestamp>
 }

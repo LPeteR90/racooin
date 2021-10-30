@@ -6,6 +6,7 @@ import androidx.datastore.dataStore
 import arrow.core.Either
 import arrow.core.Either.Companion.catch
 import com.google.protobuf.Timestamp
+import com.greyhairredbear.racooin.core.interfaces.CryptoCurrencyRatesWithTimestamp
 import com.greyhairredbear.racooin.core.interfaces.Persistence
 import com.greyhairredbear.racooin.core.model.CryptoBalance
 import com.greyhairredbear.racooin.core.model.CryptoCurrency
@@ -20,6 +21,8 @@ import com.greyhairredbear.racooin.persistence.serializer.CryptoBalanceSerialize
 import com.greyhairredbear.racooin.persistence.serializer.CryptoCurrencyRateSerializer
 import com.greyhairredbear.racooin.persistence.serializer.InvestSerializer
 import kotlinx.coroutines.flow.firstOrNull
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import com.greyhairredbear.racooin.persistence.CryptoBalance as PersistenceCryptoBalance
 import com.greyhairredbear.racooin.persistence.CryptoCurrency as PersistenceCryptoCurrency
 import com.greyhairredbear.racooin.persistence.FiatBalance as PersistenceFiatBalance
@@ -84,21 +87,31 @@ class DataStorePersistence(applicationContext: Context) : Persistence {
                 ?: listOf()
         }
 
-    override suspend fun persistCurrencyRates(rates: List<CryptoCurrencyRate>): Either<PersistenceError, Unit> =
+    override suspend fun persistCurrencyRates(
+        rates: List<CryptoCurrencyRate>
+    ): Either<PersistenceError, Unit> =
         catchAsPersistenceError {
             ratesStore.updateData {
                 CryptoCurrencyRates.newBuilder()
+                    .setTimeOfFetching(LocalDateTime.now().toTimestamp())
                     .addAllRates(rates.map { it.toPersistenceModel() })
                     .build()
             }
         }
 
-    override suspend fun fetchCurrencyRates(): Either<PersistenceError, List<CryptoCurrencyRate>> =
+    override suspend fun fetchCurrencyRates(): Either<PersistenceError, CryptoCurrencyRatesWithTimestamp> =
         catchAsPersistenceError {
             ratesStore.data.firstOrNull()
-                ?.ratesList
-                ?.map { it.toCoreModel() }
-                ?: listOf()
+                ?.let { rates ->
+                    CryptoCurrencyRatesWithTimestamp(
+                        rates.timeOfFetching.toLocalDateTime(),
+                        rates.ratesList.map { it.toCoreModel() },
+                    )
+                }
+                ?: CryptoCurrencyRatesWithTimestamp(
+                    LocalDateTime.now().minusYears(1),
+                    listOf()
+                )
         }
 }
 
@@ -125,6 +138,18 @@ private fun Invests.with(
             )
         }
     ).build()
+
+private fun LocalDateTime.toTimestamp(): Timestamp =
+    toInstant(ZoneOffset.UTC)
+        .let {
+            Timestamp.newBuilder()
+                .setSeconds(it.epochSecond)
+                .setNanos(it.nano)
+                .build()
+        }
+
+private fun Timestamp.toLocalDateTime(): LocalDateTime =
+    LocalDateTime.ofEpochSecond(seconds, nanos, ZoneOffset.UTC)
 
 private suspend fun <T> catchAsPersistenceError(block: suspend () -> T): Either<PersistenceError, T> =
     catch({ PersistenceError }, { block() })

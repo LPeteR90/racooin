@@ -66,6 +66,9 @@ dependencies {
     implementation(Compose.COMPOSE_MATERIAL)
     implementation(Compose.COMPOSE_UI_TOOLING_PREVIEW)
     implementation(Compose.COMPOSE_FOUNDATION)
+
+    implementation(Compose.ACCOMPANIST_SWIPE_REFRESH)
+
     implementation(Android.ANDROIDX_LIFECYCLE_VIEWMODEL_COMPOSE)
 
     implementation(Protobuf.PROTOBUF_JAVA_LITE)

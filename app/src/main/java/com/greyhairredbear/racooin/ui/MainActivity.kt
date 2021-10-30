@@ -29,17 +29,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    // TODO:
-    //  onCreate:
-    //  - calculate balances
-    //  -- load rates
-    //  --- store rates in persistence
-    //      (only call api on force refresh or when older than 1h)
-    //  -- load persisted balances
-    //  -- multiply rates with balances
-    //  -- return balance
-    //  onRefresh:
-    //  - calculate balances
-    //  onChangeCryptoCurrency
 }

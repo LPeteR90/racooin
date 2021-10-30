@@ -1,5 +1,6 @@
 import Android.DAGGER_GROUP
 import Core.KOTLINX_GROUP
+import Versions.ACCOMPANIST_VERSION
 import Versions.ANDROID_MATERIAL_VERSION
 import Versions.ARROW_VERSION
 import Versions.BUILD_TOOLS_VERSION
@@ -45,6 +46,8 @@ object Versions {
     const val ANDROIDX_TEST_VERSION = "1.3.0"
     const val ESPRESSO_CORE_VERSION = "3.3.0"
 
+    const val ACCOMPANIST_VERSION = "0.20.0"
+
     const val PROTOBUF_VERSION = "3.10.0"
 }
 
@@ -80,7 +83,7 @@ object Plugins {
 object Sdk {
     const val COMPILE_SDK_VERSION = 31
     const val TARGET_SDK_VERSION = 31
-    const val MIN_SDK_VERSION = 23
+    const val MIN_SDK_VERSION = 26
 }
 
 object Core {
@@ -147,12 +150,16 @@ object Compose {
     private const val COMPOSE_UI_GROUP = "androidx.compose.ui"
     private const val COMPOSE_MAT_GROUP = "androidx.compose.material"
     private const val COMPOSE_FOUNDATION_GROUP = "androidx.compose.foundation"
+    private const val ACCOMPANIST_GROUP = "com.google.accompanist"
 
     const val COMPOSE_UI = "$COMPOSE_UI_GROUP:ui:$COMPOSE_VERSION"
     const val COMPOSE_MATERIAL = "$COMPOSE_MAT_GROUP:material:$COMPOSE_VERSION"
     const val COMPOSE_UI_TOOLING = "$COMPOSE_UI_GROUP:ui-tooling:$COMPOSE_VERSION"
     const val COMPOSE_UI_TOOLING_PREVIEW = "$COMPOSE_UI_GROUP:ui-tooling-preview:$COMPOSE_VERSION"
     const val COMPOSE_FOUNDATION = "$COMPOSE_FOUNDATION_GROUP:foundation:$COMPOSE_VERSION"
+
+    const val ACCOMPANIST_SWIPE_REFRESH =
+        "$ACCOMPANIST_GROUP:accompanist-swiperefresh:$ACCOMPANIST_VERSION"
 }
 
 object GoogleLibs {
