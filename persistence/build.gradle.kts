@@ -4,16 +4,14 @@ import com.google.protobuf.gradle.protobuf
 import com.google.protobuf.gradle.protoc
 
 plugins {
-    kotlin(Plugins.KAPT)
-    id(Plugins.ANDROID_APPLICATION)
+    id(Plugins.ANDROID_LIBRARY)
     kotlin(Plugins.ANDROID)
     id(Plugins.PROTOBUF) version BuildPluginsVersions.PROTOBUF
-    id(Plugins.HILT)
 }
 
-val installGitHooks by rootProject.tasks.existing
-val preBuild by tasks.existing {
-    dependsOn(installGitHooks)
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 android {
@@ -23,15 +21,10 @@ android {
         minSdk = Sdk.MIN_SDK_VERSION
         targetSdk = Sdk.TARGET_SDK_VERSION
 
-        applicationId = AppInfo.APP_ID
-        versionCode = AppInfo.APP_VERSION_CODE
-        versionName = AppInfo.APP_VERSION_NAME
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
@@ -41,13 +34,9 @@ android {
             )
         }
     }
-
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = Versions.COMPOSE_VERSION
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     lint {
@@ -58,30 +47,14 @@ android {
 
 dependencies {
     implementation(project(mapOf("path" to ":core")))
-    implementation(project(mapOf("path" to ":apiclient")))
-    implementation(project(mapOf("path" to ":persistence")))
 
     implementation(Core.KOTLINX_COROUTINES)
-
-    implementation(Compose.COMPOSE_UI)
-    implementation(Compose.COMPOSE_MATERIAL)
-    implementation(Compose.COMPOSE_UI_TOOLING_PREVIEW)
-    implementation(Compose.COMPOSE_FOUNDATION)
-
-    implementation(Compose.ACCOMPANIST_SWIPE_REFRESH)
-
-    implementation(Android.ANDROIDX_LIFECYCLE_VIEWMODEL_COMPOSE)
-
     implementation(Protobuf.PROTOBUF_JAVA_LITE)
     implementation(Android.ANDROIDX_DATASTORE)
 
-    implementation(Android.ANDROIDX_APPCOMPAT)
     implementation(Android.ANDROIDX_CORE_KTX)
     implementation(Android.ANDROIDX_ACTIVITY)
     implementation (GoogleLibs.ANDROID_MATERIAL)
-
-    implementation(Android.HILT_ANDROID)
-    kapt(Android.HILT_ANDROID_COMPILER)
 
     testImplementation(Testing.KOTEST_RUNNER)
     testImplementation(Testing.KOTEST_JUNIT_RUNNER)
@@ -94,13 +67,6 @@ dependencies {
     androidTestImplementation(AndroidTesting.ANDROIDX_TEST_RUNNER)
     androidTestImplementation(AndroidTesting.ANDROIDX_TEST_EXT_JUNIT)
     androidTestImplementation(AndroidTesting.ANDROIDX_TEST_RULES)
-    androidTestImplementation(AndroidTesting.ESPRESSO_CORE)
-
-    debugImplementation(Compose.COMPOSE_UI_TOOLING)
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 protobuf {

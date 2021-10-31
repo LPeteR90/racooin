@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option java_package = "com.greyhairredbear.racooin.persistence";
+option java_multiple_files = true;
+
+enum CryptoCurrency {
+  BITCOIN = 0;
+  ETHEREUM = 1;
+  DOGECOIN = 2;
+  LITECOIN = 3;
+  RIPPLE = 4;
+}
+
+enum FiatCurrency {
+  EURO = 0;
+  US_DOLLAR = 1;
+}
+
+message FiatBalance {
+  FiatCurrency currency = 1;
+  double balance = 2;
+}
+
+message CryptoBalance {
+  CryptoCurrency cryptoCurrency = 1;
+  double balance = 2;
+}
+
+message Invest {
+  CryptoCurrency cryptoCurrency = 1;
+  FiatBalance fiatBalance = 2;
+}
+
+message CryptoBalances {
+  repeated CryptoBalance balances = 1;
+}
+
+message Invests {
+  repeated Invest invests = 1;
+}
+
+message CryptoCurrencyRate {
+  CryptoCurrency cryptoCurrency = 1;
+  FiatBalance fiatBalance = 2;
+}
+
+message CryptoCurrencyRates {
+  google.protobuf.Timestamp timeOfFetching = 1;
+  repeated CryptoCurrencyRate rates = 2;
+}

@@ -1,3 +1,6 @@
+import Versions.JVM_TARGET
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id(Plugins.ANDROID_APPLICATION) version BuildPluginsVersions.ANDROID_GRADLE_PLUGIN apply false
     kotlin(Plugins.ANDROID) version BuildPluginsVersions.KOTLIN apply false
@@ -31,6 +34,12 @@ allprojects {
     tasks.withType<Test> {
         useJUnitPlatform()
     }
+
+    tasks.withType<KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = JVM_TARGET
+        }
+    }
 }
 
 subprojects {
@@ -55,7 +64,7 @@ tasks.register("clean").configure {
     delete("build")
 }
 
-tasks.withType<io.gitlab.arturbosch.detekt.Detekt>() {
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt> {
     include("**/*.kt")
     include("**/*.kts")
     exclude("**/resources/**")

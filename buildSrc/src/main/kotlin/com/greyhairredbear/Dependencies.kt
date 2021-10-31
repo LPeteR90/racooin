@@ -19,6 +19,7 @@ import Versions.PROTOBUF_VERSION
 import Versions.SUPPORT_ACTIVITY_VERSION
 
 object Versions {
+    const val JVM_TARGET = "11"
     const val BUILD_TOOLS_VERSION = "7.0.2"
     const val KOTLIN_COROUTINES_VERSION = "1.5.1"
 
@@ -71,6 +72,7 @@ object Plugins {
     const val HILT_ANDROID_GRADLE_PLUGIN =
         "$DAGGER_GROUP:hilt-android-gradle-plugin:$HILT_VERSION"
     const val ANDROID_APPLICATION = "com.android.application"
+    const val ANDROID_LIBRARY = "com.android.library"
     const val KOTLIN_ANDROID = "kotlin-android"
 
     const val LIB_JAVA = "java-library"

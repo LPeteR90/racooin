@@ -2,11 +2,15 @@ package com.greyhairredbear.racooin.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import arrow.core.Either
+import arrow.core.right
 import com.greyhairredbear.racooin.core.interfaces.ApiClient
 import com.greyhairredbear.racooin.core.interfaces.Persistence
 import com.greyhairredbear.racooin.core.interfaces.Resource
+import com.greyhairredbear.racooin.core.model.CryptoBalance
 import com.greyhairredbear.racooin.core.model.CryptoCurrency
 import com.greyhairredbear.racooin.core.model.CryptoCurrencyRate
+import com.greyhairredbear.racooin.core.model.UsecaseError
 import com.greyhairredbear.racooin.core.usecase.calculateBalances
 import com.greyhairredbear.racooin.core.usecase.getCurrencyRates
 import com.greyhairredbear.racooin.core.usecase.reloadCurrencyRates
@@ -39,7 +43,8 @@ class MainViewModel @Inject constructor(
                     )
                 },
                 // TODO: for starters, use hardcoded list of own balances
-                fetchCryptoBalances = { persistence.fetchAllCryptoBalances() },
+//                fetchCryptoBalances = { persistence.fetchAllCryptoBalances() },
+                fetchCryptoBalances = ::dummyCryptoBalances,
             ).fold(
                 ifRight = {},
                 ifLeft = {},
@@ -56,7 +61,8 @@ class MainViewModel @Inject constructor(
                         persistRates = { persistence.persistCurrencyRates(it) },
                     )
                 },
-                fetchCryptoBalances = { persistence.fetchAllCryptoBalances() },
+//                fetchCryptoBalances = { persistence.fetchAllCryptoBalances() },
+                fetchCryptoBalances = ::dummyCryptoBalances,
             ).fold(
                 ifRight = {},
                 ifLeft = {},
@@ -64,9 +70,17 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    // TODO: refactor to ui cryptoCurrency
-    // TODO: move persistence to separate aar?
     fun persistCryptoBalance(balance: Double, currency: CryptoCurrency) {
         // TODO
     }
+}
+
+private fun dummyCryptoBalances(): Either<UsecaseError, List<CryptoBalance>> {
+    return listOf(
+        CryptoBalance(cryptoCurrency = CryptoCurrency.BITCOIN, balance = 0.0),
+        CryptoBalance(cryptoCurrency = CryptoCurrency.ETHEREUM, balance = 0.0),
+        CryptoBalance(cryptoCurrency = CryptoCurrency.DOGECOIN, balance = 0.0),
+        CryptoBalance(cryptoCurrency = CryptoCurrency.RIPPLE, balance = 0.0),
+        CryptoBalance(cryptoCurrency = CryptoCurrency.LITECOIN, balance = 0.0),
+    ).right()
 }
