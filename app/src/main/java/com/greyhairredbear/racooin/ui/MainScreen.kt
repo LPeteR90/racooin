@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.greyhairredbear.racooin.core.interfaces.Resource
 import com.greyhairredbear.racooin.core.model.CryptoFiatBalance
 
 @Composable
@@ -22,18 +21,18 @@ fun MainScreen(
     val uiState by viewModel.uiState.collectAsState()
     SwipeRefresh(
         state = rememberSwipeRefreshState(
-            true // TODO: viewmodel.isRefreshing
+            false // TODO: viewmodel.isRefreshing
         ),
         onRefresh = { viewModel.refresh() }
     ) {
-
+        CryptoCurrencySummary(uiState)
     }
 }
 
 // TODO Preview
 @Composable
 fun CryptoCurrencySummary(
-    uiState: Resource<List<CryptoFiatBalance>>
+    uiState: Resource<List<CryptoCurrencyOverviewUiModel>>
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -41,10 +40,10 @@ fun CryptoCurrencySummary(
     ) {
         when (uiState) {
             is Resource.Success -> {
-                (uiState as Resource.Success).data.forEach {
+                uiState.data.forEach {
                     Text(
-                        text = "1 ${it.cryptoBalance.cryptoCurrency.name} = " +
-                                "${it.fiatBalance.balance} ${it.fiatBalance.fiatCurrency}"
+                        text = "${it.cryptoBalance} ${it.cryptoCurrency.name} = " +
+                                "${it.fiatBalance} ${it.fiatCurrency.name}"
                     )
                 }
             }

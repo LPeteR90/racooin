@@ -1,4 +1,4 @@
-package com.greyhairredbear.racooin.core.interfaces
+package com.greyhairredbear.racooin.ui
 
 sealed class Resource<out T> {
     data class Success<out T>(val data: T) : Resource<T>()
