@@ -47,9 +47,8 @@ object Versions {
     const val ANDROIDX_TEST_VERSION = "1.3.0"
     const val ESPRESSO_CORE_VERSION = "3.3.0"
 
+    const val PROTOBUF_VERSION = "3.14.0"
     const val ACCOMPANIST_VERSION = "0.20.0"
-
-    const val PROTOBUF_VERSION = "3.10.0"
 }
 
 object BuildPluginsVersions {
